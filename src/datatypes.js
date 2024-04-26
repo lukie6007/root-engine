@@ -19,18 +19,6 @@ export var CollisionShape;
     CollisionShape[CollisionShape["Rectangle"] = 0] = "Rectangle";
     CollisionShape[CollisionShape["Circle"] = 1] = "Circle";
 })(CollisionShape || (CollisionShape = {}));
-export class WorldInstance {
-    Position;
-    Size;
-    CollisionSize;
-    CollisionShape;
-    constructor(Position, Size, CollisionSize, CollisionShape) {
-        this.Position = Position;
-        this.Size = Size;
-        this.CollisionSize = CollisionSize;
-        this.CollisionShape = CollisionShape;
-    }
-}
 export class Mouse {
     Position;
     Down;

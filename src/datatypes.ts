@@ -1,4 +1,4 @@
-import { Component } from "./base.ts"
+import { Component } from "./base.js"
 
 export class Vector2 {
     constructor(public x: number = 0, public y: number = 0) { }
@@ -16,10 +16,6 @@ export class Vector2 {
 export enum CollisionShape {
     Rectangle,
     Circle
-}
-
-export class WorldInstance {
-    constructor(public Position: Vector2, public Size: Vector2, public CollisionSize: Vector2, public CollisionShape: CollisionShape) { }
 }
 
 export class Mouse {

@@ -1,36 +1,10 @@
-export class Component {
-    Service;
-    Name;
-    Parent;
-    ID;
-    constructor(Service, Name, Parent, ID) {
-        this.Service = Service;
-        this.Name = Name;
-        this.Parent = Parent;
-        this.ID = ID;
-    }
-    Find(child) {
-        return this.Service?.Children.find(component => component.Name === child);
-    }
-    Clone() {
-        // Create a new instance of Component with the same properties
-        return { ...this };
-    }
-    Destroy() {
-        this.Parent = null;
-        this.Service = null;
-    }
-}
-export class Project {
-    Name;
-    Settings;
-    Services;
-    constructor(Name = "New Project", Settings = {}, Services = []) {
-        this.Name = Name;
-        this.Settings = Settings;
-        this.Services = Services;
-    }
-    GetService(targetservice) {
-        return this.Services.find(service => service instanceof targetservice);
-    }
-}
+import { RunService, World, Project, WorldObject } from "./base.js";
+let canvas = document.getElementById("main");
+var main = new Project("Beta Project", canvas.getContext("2d"), {});
+var runservice = main.GetService(RunService);
+var sprite = new Image();
+sprite.src = "./src/Player.svg";
+var player = new WorldObject(main.GetService(World), "Player", sprite);
+runservice.OnUpdate(() => {
+    console.log("test");
+});
