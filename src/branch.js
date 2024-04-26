@@ -11,8 +11,9 @@ export class Project {
         this.Settings = Settings;
         this.Services = Services;
         this.Services.push(new RunService(this));
-        this.Services.push(new World(this, Context));
+        this.Services.push(new World(this));
         this.Services.push(new InputService(Context));
+        this.Services.push(new Renderer(this, Context));
     }
     GetService(targetServiceName) {
         return this.Services.find(service => service.constructor.name === targetServiceName);
@@ -22,17 +23,20 @@ export class Project {
 export class RunService extends Service {
     Project;
     Listeners = [];
+    LastTime;
     constructor(Project) {
         super(Project);
         this.Project = Project;
         this.Advance = this.Advance.bind(this); // Binding Advance to the correct context
-        requestAnimationFrame(this.Advance);
+        this.LastTime = performance.now();
+        setInterval(this.Advance, 16.66);
     }
     Advance() {
+        let DeltaTime = performance.now() - this.LastTime;
+        this.LastTime = performance.now();
         this.Listeners.forEach(listener => {
-            listener.Function.call(listener.Object);
+            listener.Function.call(listener.Object, 1000 / DeltaTime);
         });
-        requestAnimationFrame(this.Advance.bind(this)); // Binding Advance to the correct context
     }
     OnUpdate(list) {
         this.Listeners.push(list);
@@ -56,7 +60,7 @@ export class InputService extends Service {
     getMouse(event) {
         let canvas = this.context.canvas;
         let scalar = new Vector2(canvas.width, canvas.height).divide(new Vector2(canvas.clientWidth, canvas.clientHeight));
-        this.Mouse.Position = new Vector2(event.clientX, event.clientY).multiplyVector(scalar).subtract(new Vector2(canvas.width / 2, canvas.height / 2));
+        this.Mouse.Position = new Vector2(event.clientX, event.clientY).subtract(new Vector2(canvas.getBoundingClientRect().left, canvas.getBoundingClientRect().top)).multiplyVector(scalar).subtract(new Vector2(canvas.width / 2, canvas.height / 2)).multiplyVector(new Vector2(1, -1));
     }
     handleKeyDown(event) {
         const key = event.key;
@@ -77,7 +81,7 @@ export class InputService extends Service {
         return this.KeysDown.includes(key);
     }
 }
-export class World extends Service {
+export class Renderer extends Service {
     Project;
     Context;
     constructor(Project, Context) {
@@ -90,13 +94,31 @@ export class World extends Service {
     Render() {
         let canvas = this.Context.canvas;
         this.Context.clearRect(0, 0, canvas.width, canvas.height);
-        let render = this.Children.filter((child) => child instanceof WorldObject);
+        let world = this.Project.GetService("World");
+        //world objects
+        let render = world?.Children.filter((child) => child instanceof WorldObject);
         render.forEach((obj) => {
             const drawImage = {
-                position: obj.WorldInstance.Position.add(new Vector2(canvas.width / 2, canvas.height / 2)).subtract(obj.WorldInstance.Size.multiplyScalar(0.5))
+                position: obj.WorldInstance.Position.multiplyVector(new Vector2(1, -1)).add(new Vector2(canvas.width / 2, canvas.height / 2)).subtract(obj.WorldInstance.Size.multiplyScalar(0.5))
             };
             this.Context.drawImage(obj.Sprite, drawImage.position.x, drawImage.position.y);
         });
+        //text
+        render = world?.Children.filter((child) => child instanceof Text);
+        render.forEach((obj) => {
+            const drawImage = {
+                position: obj.Position.multiplyVector(new Vector2(1, -1)).add(new Vector2(canvas.width / 2, canvas.height / 2))
+            };
+            this.Context.font = obj.Font;
+            this.Context.fillText(obj.Text, drawImage.position.x, drawImage.position.y);
+        });
+    }
+}
+export class World extends Service {
+    Project;
+    constructor(Project) {
+        super(Project);
+        this.Project = Project;
     }
 }
 //components
@@ -108,6 +130,16 @@ export class WorldObject extends Component {
         this.Sprite = Sprite;
         this.WorldInstance = new WorldInstance();
         this.WorldInstance.Size = new Vector2(this.Sprite.width, this.Sprite.height);
-        Service.Children.push(this);
+    }
+}
+export class Text extends Component {
+    Text;
+    Position;
+    Font;
+    constructor(Service, Name, Text = "", Position = new Vector2(), Font = "25pt Arial") {
+        super(Service, Name);
+        this.Text = Text;
+        this.Position = Position;
+        this.Font = Font;
     }
 }

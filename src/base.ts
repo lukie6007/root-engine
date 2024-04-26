@@ -1,7 +1,7 @@
 import { Project } from "./branch.js";
 
 export class Component {
-    constructor(public Service: Service | null, public Name: string, public Parent: Component | null = null, public ID: number = 0) { }
+    constructor(public Service: Service | null, public Name: string, public Parent: Component | null = null, public ID: number = 0) { Service?.Children.push(this) }
 
     Find(child: string): Component | undefined {
         return this.Service?.Children.find(component => component.Name === child);
