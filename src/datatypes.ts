@@ -21,3 +21,8 @@ export enum CollisionShape {
 export class Mouse {
     constructor(public Position: Vector2, public Down: string[], public Selected: Component) { }
 }
+
+export class WorldInstance {
+    CollisionShape: CollisionShape
+    constructor(public Position: Vector2 = new Vector2(), public Size: Vector2 = new Vector2(), public CollisionSize: Vector2 = new Vector2()) { this.CollisionShape = CollisionShape.Rectangle }
+}

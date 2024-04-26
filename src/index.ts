@@ -1,12 +1,9 @@
-import { RunService, World, Project, WorldObject } from "./base.js";
+import { Project, RunService, WorldObject, World } from "./branch.js"
 
 let canvas = document.getElementById("main") as HTMLCanvasElement
-var main = new Project("Beta Project", canvas.getContext("2d") as CanvasRenderingContext2D, {})
-var runservice = main.GetService(RunService) as RunService
-var sprite = new Image()
+let main = new Project("Beta Project", canvas.getContext("2d") as CanvasRenderingContext2D, {})
+let runservice = main.GetService(RunService) as RunService
+let sprite = new Image()
 sprite.src = "./src/Player.svg"
-var player = new WorldObject(main.GetService(World) as World, "Player", sprite)
+let player = new WorldObject(main.GetService(World) as World, "Player", sprite)
 
-runservice.OnUpdate(() => {
-    console.log("test")
-})

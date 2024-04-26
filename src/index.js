@@ -1,10 +1,7 @@
-import { RunService, World, Project, WorldObject } from "./base.js";
+import { Project, RunService, WorldObject, World } from "./branch.js";
 let canvas = document.getElementById("main");
-var main = new Project("Beta Project", canvas.getContext("2d"), {});
+let main = new Project("Beta Project", canvas.getContext("2d"), {});
 var runservice = main.GetService(RunService);
 var sprite = new Image();
 sprite.src = "./src/Player.svg";
 var player = new WorldObject(main.GetService(World), "Player", sprite);
-runservice.OnUpdate(() => {
-    console.log("test");
-});

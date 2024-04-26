@@ -29,3 +29,15 @@ export class Mouse {
         this.Selected = Selected;
     }
 }
+export class WorldInstance {
+    Position;
+    Size;
+    CollisionSize;
+    CollisionShape;
+    constructor(Position = new Vector2(), Size = new Vector2(), CollisionSize = new Vector2()) {
+        this.Position = Position;
+        this.Size = Size;
+        this.CollisionSize = CollisionSize;
+        this.CollisionShape = CollisionShape.Rectangle;
+    }
+}
