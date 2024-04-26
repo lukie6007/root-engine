@@ -1,1 +1,39 @@
-export class Vector2 { constructor(t = 0, i = 0) { this.x = t, this.y = i, this.magnitude = () => Math.sqrt(this.x * this.x + this.y * this.y), this.normalize = () => this.multiplyScalar(1 / this.magnitude()), this.dot = t => this.x * t.x + this.y * t.y, this.angleBetween = t => Math.acos(this.dot(t) / (this.magnitude() * t.magnitude())), this.add = t => new Vector2(this.x + t.x, this.y + t.y), this.subtract = t => new Vector2(this.x - t.x, this.y - t.y), this.divide = t => new Vector2(this.x / t.x, this.y / t.y), this.multiplyScalar = t => new Vector2(this.x * t, this.y * t), this.multiplyVector = t => new Vector2(this.x * t.x, this.y * t.y) } } export var CollisionShape; !function (t) { t[t.Rectangle = 0] = "Rectangle", t[t.Circle = 1] = "Circle" }(CollisionShape || (CollisionShape = {})); export class Mouse { constructor(t = new Vector2, i = [], s = null) { this.Position = t, this.Down = i, this.Selected = s } } export class WorldInstance { constructor(t = new Vector2, i = new Vector2) { this.Position = t, this.Size = i } } export class Listener { constructor(t, i) { this.Object = t, this.Function = i } }
+export class Vector2 {
+    constructor(x = 0, y = 0) {
+        this.x = x;
+        this.y = y;
+        this.magnitude = () => Math.sqrt(this.x * this.x + this.y * this.y);
+        this.normalize = () => this.multiplyScalar(1 / this.magnitude());
+        this.dot = (other) => this.x * other.x + this.y * other.y;
+        this.angleBetween = (other) => Math.acos(this.dot(other) / (this.magnitude() * other.magnitude()));
+        this.add = (other) => new Vector2(this.x + other.x, this.y + other.y);
+        this.subtract = (other) => new Vector2(this.x - other.x, this.y - other.y);
+        this.divide = (other) => new Vector2(this.x / other.x, this.y / other.y);
+        this.multiplyScalar = (scalar) => new Vector2(this.x * scalar, this.y * scalar);
+        this.multiplyVector = (other) => new Vector2(this.x * other.x, this.y * other.y);
+    }
+}
+export var CollisionShape;
+(function (CollisionShape) {
+    CollisionShape[CollisionShape["Rectangle"] = 0] = "Rectangle";
+    CollisionShape[CollisionShape["Circle"] = 1] = "Circle";
+})(CollisionShape || (CollisionShape = {}));
+export class Mouse {
+    constructor(Position = new Vector2(), Down = [], Selected = null) {
+        this.Position = Position;
+        this.Down = Down;
+        this.Selected = Selected;
+    }
+}
+export class WorldInstance {
+    constructor(Position = new Vector2(), Size = new Vector2()) {
+        this.Position = Position;
+        this.Size = Size;
+    }
+}
+export class Listener {
+    constructor(Object, Function) {
+        this.Object = Object;
+        this.Function = Function;
+    }
+}
