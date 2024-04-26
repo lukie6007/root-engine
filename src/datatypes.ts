@@ -9,6 +9,7 @@ export class Vector2 {
     angleBetween = (other: Vector2) => Math.acos(this.dot(other) / (this.magnitude() * other.magnitude()));
     add = (other: Vector2) => new Vector2(this.x + other.x, this.y + other.y);
     subtract = (other: Vector2) => new Vector2(this.x - other.x, this.y - other.y);
+    divide = (other: Vector2) => new Vector2(this.x / other.x, this.y / other.y);
     multiplyScalar = (scalar: number) => new Vector2(this.x * scalar, this.y * scalar);
     multiplyVector = (other: Vector2) => new Vector2(this.x * other.x, this.y * other.y);
 }
@@ -19,10 +20,13 @@ export enum CollisionShape {
 }
 
 export class Mouse {
-    constructor(public Position: Vector2, public Down: string[], public Selected: Component) { }
+    constructor(public Position: Vector2 = new Vector2(), public Down: string[] = [], public Selected: Component | null = null) { }
 }
 
 export class WorldInstance {
-    CollisionShape: CollisionShape
-    constructor(public Position: Vector2 = new Vector2(), public Size: Vector2 = new Vector2(), public CollisionSize: Vector2 = new Vector2()) { this.CollisionShape = CollisionShape.Rectangle }
+    constructor(public Position: Vector2 = new Vector2(), public Size: Vector2 = new Vector2()) { }
+}
+
+export class Listener {
+    constructor(public Object: object, public Function: Function) { }
 }

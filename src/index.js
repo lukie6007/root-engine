@@ -1,7 +1,15 @@
-import { Project, RunService, WorldObject, World } from "./branch.js";
+import { Project, WorldObject } from "./branch.js";
+import { Listener } from "./datatypes.js";
 let canvas = document.getElementById("main");
 let main = new Project("Beta Project", canvas.getContext("2d"), {});
-var runservice = main.GetService(RunService);
-var sprite = new Image();
+let runservice = main.GetService("RunService");
+let inputservice = main.GetService("InputService");
+let sprite = new Image();
 sprite.src = "./src/Player.svg";
-var player = new WorldObject(main.GetService(World), "Player", sprite);
+let player = new WorldObject(main.GetService("World"), "Player", sprite);
+runservice.OnUpdate(new Listener({}, () => {
+    player.WorldInstance.Position = inputservice.Mouse.Position;
+    if (inputservice.isKeyDown("ArrowRight")) {
+        console.log("Hello World!");
+    }
+}));
