@@ -8,6 +8,7 @@ export class Component {
         this.Name = Name;
         this.Parent = Parent;
         this.ID = ID;
+        Service?.Children.push(this);
     }
     Find(child) {
         return this.Service?.Children.find(component => component.Name === child);
