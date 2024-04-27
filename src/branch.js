@@ -1,10 +1,6 @@
 import { Component, Service } from "./base.js";
 import { Listener, Mouse, Vector2, WorldInstance } from "./datatypes.js";
 export class Project {
-    Name;
-    Context;
-    Settings;
-    Services;
     constructor(Name = "New Project", Context, Settings = {}, Services = []) {
         this.Name = Name;
         this.Context = Context;
@@ -21,12 +17,10 @@ export class Project {
 }
 //services
 export class RunService extends Service {
-    Project;
-    Listeners = [];
-    LastTime;
     constructor(Project) {
         super(Project);
         this.Project = Project;
+        this.Listeners = [];
         this.Advance = this.Advance.bind(this); // Binding Advance to the correct context
         this.LastTime = performance.now();
         setInterval(this.Advance, 16.66);
@@ -44,9 +38,6 @@ export class RunService extends Service {
     }
 }
 export class InputService extends Service {
-    context;
-    KeysDown;
-    Mouse;
     constructor(context) {
         super();
         this.context = context;
@@ -82,13 +73,12 @@ export class InputService extends Service {
     }
 }
 export class Renderer extends Service {
-    Project;
-    Context;
     constructor(Project, Context) {
+        var _a;
         super(Project);
         this.Project = Project;
         this.Context = Context;
-        let RS = this.Project?.GetService("RunService");
+        let RS = (_a = this.Project) === null || _a === void 0 ? void 0 : _a.GetService("RunService");
         RS.OnUpdate(new Listener(this, this.Render));
     }
     Render() {
@@ -96,7 +86,7 @@ export class Renderer extends Service {
         this.Context.clearRect(0, 0, canvas.width, canvas.height);
         let world = this.Project.GetService("World");
         //world objects
-        let render = world?.Children.filter((child) => child instanceof WorldObject);
+        let render = world === null || world === void 0 ? void 0 : world.Children.filter((child) => child instanceof WorldObject);
         render.forEach((obj) => {
             const drawImage = {
                 position: obj.WorldInstance.Position.multiplyVector(new Vector2(1, -1)).add(new Vector2(canvas.width / 2, canvas.height / 2)).subtract(obj.WorldInstance.Size.multiplyScalar(0.5))
@@ -104,7 +94,7 @@ export class Renderer extends Service {
             this.Context.drawImage(obj.Sprite, drawImage.position.x, drawImage.position.y);
         });
         //text
-        render = world?.Children.filter((child) => child instanceof Text);
+        render = world === null || world === void 0 ? void 0 : world.Children.filter((child) => child instanceof Text);
         render.forEach((obj) => {
             const drawImage = {
                 position: obj.Position.multiplyVector(new Vector2(1, -1)).add(new Vector2(canvas.width / 2, canvas.height / 2))
@@ -115,7 +105,6 @@ export class Renderer extends Service {
     }
 }
 export class World extends Service {
-    Project;
     constructor(Project) {
         super(Project);
         this.Project = Project;
@@ -123,8 +112,6 @@ export class World extends Service {
 }
 //components
 export class WorldObject extends Component {
-    Sprite;
-    WorldInstance;
     constructor(Service, Name, Sprite) {
         super(Service, Name, null);
         this.Sprite = Sprite;
@@ -133,9 +120,6 @@ export class WorldObject extends Component {
     }
 }
 export class Text extends Component {
-    Text;
-    Position;
-    Font;
     constructor(Service, Name, Text = "", Position = new Vector2(), Font = "25pt Arial") {
         super(Service, Name);
         this.Text = Text;
