@@ -26,9 +26,10 @@ export class Mouse {
     }
 }
 export class WorldInstance {
-    constructor(Position = new Vector2(), Size = new Vector2()) {
+    constructor(Position = new Vector2(), Size = new Vector2(), Rotation = 0) {
         this.Position = Position;
         this.Size = Size;
+        this.Rotation = Rotation;
     }
 }
 export class Listener {

@@ -89,9 +89,21 @@ export class Renderer extends Service {
         let render = world === null || world === void 0 ? void 0 : world.Children.filter((child) => child instanceof WorldObject);
         render.forEach((obj) => {
             const drawImage = {
-                position: obj.WorldInstance.Position.multiplyVector(new Vector2(1, -1)).add(new Vector2(canvas.width / 2, canvas.height / 2)).subtract(obj.WorldInstance.Size.multiplyScalar(0.5))
+                position: obj.WorldInstance.Position.multiplyVector(new Vector2(1, -1)).add(new Vector2(canvas.width / 2, canvas.height / 2)).subtract(obj.WorldInstance.Size.multiplyScalar(0.5)),
+                width: obj.WorldInstance.Size.x,
+                height: obj.WorldInstance.Size.y,
+                rotation: obj.WorldInstance.Rotation
             };
-            this.Context.drawImage(obj.Sprite, drawImage.position.x, drawImage.position.y);
+            // Save the current canvas state
+            this.Context.save();
+            // Translate to the center of the object
+            this.Context.translate(drawImage.position.x + drawImage.width / 2, drawImage.position.y + drawImage.height / 2);
+            // Rotate around the center of the object
+            this.Context.rotate(drawImage.rotation);
+            // Draw the rotated image
+            this.Context.drawImage(obj.Sprite, -drawImage.width / 2, -drawImage.height / 2, drawImage.width, drawImage.height);
+            // Restore the previous canvas state
+            this.Context.restore();
         });
         //text
         render = world === null || world === void 0 ? void 0 : world.Children.filter((child) => child instanceof Text);

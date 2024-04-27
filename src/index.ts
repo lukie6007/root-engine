@@ -17,5 +17,7 @@ runservice.OnUpdate(new Listener({}, (fps: number) => {
         console.log("Hello World!")
     }
 
+    player.WorldInstance.Rotation += 0.1
+
     text.Text = "FPS: " + Math.round(fps).toString()
 }))

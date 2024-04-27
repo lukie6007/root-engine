@@ -24,7 +24,7 @@ export class Mouse {
 }
 
 export class WorldInstance {
-    constructor(public Position: Vector2 = new Vector2(), public Size: Vector2 = new Vector2()) { }
+    constructor(public Position: Vector2 = new Vector2(), public Size: Vector2 = new Vector2(), public Rotation: number = 0) { }
 }
 
 export class Listener {
