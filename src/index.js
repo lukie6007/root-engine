@@ -1,6 +1,6 @@
 import { Project, WorldObject, Text } from "./branch.js";
 import { Listener, Vector2 } from "./datatypes.js";
-let canvas = document.getElementById("main");
+let canvas = document.getElementById("viewport");
 let main = new Project("Beta Project", canvas.getContext("2d"), {});
 let runservice = main.GetService("RunService");
 let inputservice = main.GetService("InputService");
