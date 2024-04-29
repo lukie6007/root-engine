@@ -1,7 +1,7 @@
 import { Project, RunService, WorldObject, World, InputService, Text } from "./branch.js"
 import { Listener, Vector2 } from "./datatypes.js"
 
-let canvas = document.getElementById("main") as HTMLCanvasElement
+let canvas = document.getElementById("viewport") as HTMLCanvasElement
 let main = new Project("Beta Project", canvas.getContext("2d") as CanvasRenderingContext2D, {})
 let runservice = main.GetService("RunService") as RunService
 let inputservice = main.GetService("InputService") as InputService
