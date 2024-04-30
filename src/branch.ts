@@ -3,10 +3,10 @@ import { Listener, Mouse, Vector2, WorldInstance } from "./datatypes.js";
 
 export class Project {
     constructor(public Name: string = "New Project", public Context: CanvasRenderingContext2D, public Settings: object = {}, public Services: Service[] = []) {
-        this.Services.push(new RunService(this))
-        this.Services.push(new World(this))
-        this.Services.push(new InputService(Context))
-        this.Services.push(new Renderer(this, Context))
+        new RunService(this)
+        new World(this)
+        new InputService(this, Context)
+        new Renderer(this, Context)
     }
 
 
@@ -45,8 +45,8 @@ export class InputService extends Service {
     KeysDown: string[];
     Mouse: Mouse;
 
-    constructor(public context: CanvasRenderingContext2D) {
-        super()
+    constructor(Project: Project, public context: CanvasRenderingContext2D) {
+        super(Project)
         this.Mouse = new Mouse();
         this.KeysDown = [];
 
@@ -80,7 +80,6 @@ export class InputService extends Service {
     }
 
     isKeyDown(key: string): boolean {
-        //console.log(this.KeysDown)
         return this.KeysDown.includes(key)
     }
 }
@@ -159,5 +158,17 @@ export class WorldObject extends Component {
 export class Text extends Component {
     constructor(Service: Service, Name: string, public Text: string = "", public Position: Vector2 = new Vector2(), public Font: string = "25pt Arial") {
         super(Service, Name)
+    }
+}
+
+export class Actor extends WorldObject {
+    constructor(Service: Service, Name: string, public Script: string = "") {
+        super(Service, Name)
+        this.RunScript()
+    }
+
+    public RunScript() {
+        let func = new Function(this.Script)
+        func.call(this)
     }
 }

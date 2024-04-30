@@ -18,4 +18,4 @@ export class Component {
     }
 }
 
-export class Service { constructor(public Project: Project | null = null, public Children: Component[] = []) { } }
+export class Service { constructor(public Project: Project | null = null, public Children: Component[] = []) { Project?.Services.push(this) } }
