@@ -42,7 +42,7 @@ export class RunService extends Service {
 }
 
 export class InputService extends Service {
-    private KeysDown: string[];
+    KeysDown: string[];
     Mouse: Mouse;
 
     constructor(public context: CanvasRenderingContext2D) {
@@ -62,7 +62,7 @@ export class InputService extends Service {
         this.Mouse.Position = new Vector2(event.clientX, event.clientY).subtract(new Vector2(canvas.getBoundingClientRect().left, canvas.getBoundingClientRect().top)).multiplyVector(scalar).subtract(new Vector2(canvas.width / 2, canvas.height / 2)).multiplyVector(new Vector2(1, -1))
     }
 
-    handleKeyDown(event: KeyboardEvent) {
+    protected handleKeyDown(event: KeyboardEvent) {
         const key = event.key;
         if (!this.KeysDown.includes(key)) {
             this.KeysDown.push(key);
@@ -71,7 +71,7 @@ export class InputService extends Service {
         event.preventDefault();
     }
 
-    handleKeyUp(event: KeyboardEvent) {
+    protected handleKeyUp(event: KeyboardEvent) {
         const key = event.key;
         const index = this.KeysDown.indexOf(key);
         if (index !== -1) {
