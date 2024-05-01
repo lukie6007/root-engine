@@ -162,8 +162,8 @@ export class Text extends Component {
 }
 
 export class Actor extends WorldObject {
-    constructor(Service: Service, Name: string, public Script: string = "") {
-        super(Service, Name)
+    constructor(Service: Service, Name: string, Sprite: HTMLImageElement, public Script: string = "") {
+        super(Service, Name, Sprite)
         this.RunScript()
     }
 

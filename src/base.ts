@@ -7,6 +7,16 @@ export class Component {
         return this.Service?.Children.find(component => component.Name === child);
     }
 
+    GetChildren() {
+        let out: Component[] = []
+        this.Service?.Children.forEach((child) => {
+            if (child.Parent == this) {
+                out.push(child)
+            }
+        })
+        return out
+    }
+
     Clone(): Component {
         // Create a new instance of Component with the same properties
         return { ...this }
