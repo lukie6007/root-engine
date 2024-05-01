@@ -10,6 +10,16 @@ export class Component {
         var _a;
         return (_a = this.Service) === null || _a === void 0 ? void 0 : _a.Children.find(component => component.Name === child);
     }
+    GetChildren() {
+        var _a;
+        let out = [];
+        (_a = this.Service) === null || _a === void 0 ? void 0 : _a.Children.forEach((child) => {
+            if (child.Parent == this) {
+                out.push(child);
+            }
+        });
+        return out;
+    }
     Clone() {
         // Create a new instance of Component with the same properties
         return Object.assign({}, this);
@@ -23,5 +33,6 @@ export class Service {
     constructor(Project = null, Children = []) {
         this.Project = Project;
         this.Children = Children;
+        Project === null || Project === void 0 ? void 0 : Project.Services.push(this);
     }
 }

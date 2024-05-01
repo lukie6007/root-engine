@@ -6,10 +6,10 @@ export class Project {
         this.Context = Context;
         this.Settings = Settings;
         this.Services = Services;
-        this.Services.push(new RunService(this));
-        this.Services.push(new World(this));
-        this.Services.push(new InputService(Context));
-        this.Services.push(new Renderer(this, Context));
+        new RunService(this);
+        new World(this);
+        new InputService(this, Context);
+        new Renderer(this, Context);
     }
     GetService(targetServiceName) {
         return this.Services.find(service => service.constructor.name === targetServiceName);
@@ -38,8 +38,8 @@ export class RunService extends Service {
     }
 }
 export class InputService extends Service {
-    constructor(context) {
-        super();
+    constructor(Project, context) {
+        super(Project);
         this.context = context;
         this.Mouse = new Mouse();
         this.KeysDown = [];
@@ -68,7 +68,6 @@ export class InputService extends Service {
         }
     }
     isKeyDown(key) {
-        //console.log(this.KeysDown)
         return this.KeysDown.includes(key);
     }
 }
@@ -137,5 +136,16 @@ export class Text extends Component {
         this.Text = Text;
         this.Position = Position;
         this.Font = Font;
+    }
+}
+export class Actor extends WorldObject {
+    constructor(Service, Name, Sprite, Script = "") {
+        super(Service, Name, Sprite);
+        this.Script = Script;
+        this.RunScript();
+    }
+    RunScript() {
+        let func = new Function(this.Script);
+        func.call(this);
     }
 }
