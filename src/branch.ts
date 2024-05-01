@@ -1,5 +1,5 @@
 import { Component, Service } from "./base.js";
-import { Listener, Mouse, Vector2, WorldInstance } from "./datatypes.js";
+import { Listener, Mouse, Mouse, Vector2, WorldInstance } from "./datatypes.js";
 
 export class Project {
     constructor(public Name: string = "New Project", public Context: CanvasRenderingContext2D, public Settings: object = {}, public Services: Service[] = []) {
@@ -37,18 +37,13 @@ export class RunService extends Service {
 
     OnUpdate(list: Listener) {
         this.Listeners.push(list);
-        console.log("Added: ", list)
+        console.info("RUNSERVICE: Added: ", list)
     }
 }
 
 export class InputService extends Service {
-    KeysDown: string[];
-    Mouse: Mouse;
-
-    constructor(Project: Project, public context: CanvasRenderingContext2D) {
+    constructor(Project: Project, public context: CanvasRenderingContext2D, public KeysDown: string[] = [], public Mouse: Mouse = new Mouse()) {
         super(Project)
-        this.Mouse = new Mouse();
-        this.KeysDown = [];
 
         // Using arrow functions to maintain the correct context of "this"
         document.addEventListener("mousemove", (event) => this.getMouse(event));
@@ -93,49 +88,61 @@ export class Renderer extends Service {
     }
 
     Render() {
-        let canvas = this.Context.canvas
-        this.Context.clearRect(0, 0, canvas.width, canvas.height)
-        let world = this.Project.GetService("World")
-
-        //world objects
-        let render: any = world?.Children.filter((child) => child instanceof WorldObject) as WorldObject[]
-        render.forEach((obj: WorldObject) => {
-            const drawImage = {
-                position: obj.WorldInstance.Position.multiplyVector(new Vector2(1, -1)).add(new Vector2(canvas.width / 2, canvas.height / 2)).subtract(obj.WorldInstance.Size.multiplyScalar(0.5)),
-                width: obj.WorldInstance.Size.x,
-                height: obj.WorldInstance.Size.y,
-                rotation: obj.WorldInstance.Rotation
+        const canvas = this.Context.canvas;
+        const { width, height } = canvas; // Calculate canvas dimensions once
+    
+        // Batch transformations
+        this.Context.clearRect(0, 0, width, height);
+        this.Context.save();
+    
+        const world = this.Project.GetService("World");
+        const renderObjects = world?.Children.filter(
+            (child) => child instanceof WorldObject || child instanceof Text
+        );
+    
+        renderObjects?.forEach((obj) => {
+            if (obj instanceof WorldObject) {
+                const { Position, Size, Rotation, Sprite } = obj.WorldInstance;
+                const drawImage = {
+                    position: Position.multiplyVector(new Vector2(1, -1))
+                        .add(new Vector2(width / 2, height / 2))
+                        .subtract(Size.multiplyScalar(0.5)),
+                    width: Size.x,
+                    height: Size.y,
+                    rotation: Rotation,
+                };
+    
+                // Translate to the center of the object
+                this.Context.translate(
+                    drawImage.position.x + drawImage.width / 2,
+                    drawImage.position.y + drawImage.height / 2
+                );
+    
+                // Rotate around the center of the object
+                this.Context.rotate(drawImage.rotation);
+    
+                // Draw the rotated image
+                this.Context.drawImage(
+                    Sprite,
+                    -drawImage.width / 2,
+                    -drawImage.height / 2,
+                    drawImage.width,
+                    drawImage.height
+                );
+            } else if (obj instanceof Text) {
+                const { Position, Font, Text } = obj;
+                const drawTextPosition = Position.multiplyVector(new Vector2(1, -1))
+                    .add(new Vector2(width / 2, height / 2));
+    
+                this.Context.font = Font;
+                this.Context.fillText(Text, drawTextPosition.x, drawTextPosition.y);
             }
-
-            // Save the current canvas state
-            this.Context.save();
-
-            // Translate to the center of the object
-            this.Context.translate(drawImage.position.x + drawImage.width / 2, drawImage.position.y + drawImage.height / 2);
-
-            // Rotate around the center of the object
-            this.Context.rotate(drawImage.rotation);
-
-            // Draw the rotated image
-            this.Context.drawImage(obj.Sprite, -drawImage.width / 2, -drawImage.height / 2, drawImage.width, drawImage.height);
-
-            // Restore the previous canvas state
-            this.Context.restore();
-        })
-
-        //text
-        render = world?.Children.filter((child) => child instanceof Text) as Text[]
-        render.forEach((obj: Text) => {
-            const drawImage = {
-                position: obj.Position.multiplyVector(new Vector2(1, -1)).add(new Vector2(canvas.width / 2, canvas.height / 2))
-            }
-
-
-            this.Context.font = obj.Font
-            this.Context.fillText(obj.Text, drawImage.position.x, drawImage.position.y)
-
-        })
+        });
+    
+        // Restore the canvas state
+        this.Context.restore();
     }
+    
 }
 
 export class World extends Service {
@@ -156,9 +163,7 @@ export class WorldObject extends Component {
 }
 
 export class Text extends Component {
-    constructor(Service: Service, Name: string, public Text: string = "", public Position: Vector2 = new Vector2(), public Font: string = "25pt Arial") {
-        super(Service, Name)
-    }
+    constructor(Service: Service, Name: string, public Text: string = "", public Position: Vector2 = new Vector2(), public Font: string = "25pt Arial") { super(Service, Name) }
 }
 
 export class Actor extends WorldObject {
