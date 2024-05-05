@@ -80,46 +80,70 @@ export class Renderer extends Service {
         this.Context = Context;
         this.Camera = Camera;
         let RS = (_a = this.Project) === null || _a === void 0 ? void 0 : _a.GetService("RunService");
-        RS.OnUpdate(new Listener(this, this.Render));
+        RS.OnUpdate(new Listener(this, this.render));
     }
-    Render() {
+    render() {
         const canvas = this.Context.canvas;
         const { width, height } = canvas; // Calculate canvas dimensions once
         // Batch transformations
         this.Context.clearRect(0, 0, width, height);
         this.Context.save();
         const world = this.Project.GetService("World");
-        const renderObjects = world === null || world === void 0 ? void 0 : world.Children.filter((child) => child instanceof WorldObject || child instanceof Text);
+        const renderObjects = world === null || world === void 0 ? void 0 : world.Children.filter((child) => child instanceof WorldObject || child instanceof Text || child instanceof Selection);
         renderObjects === null || renderObjects === void 0 ? void 0 : renderObjects.forEach((obj) => {
             if (obj instanceof WorldObject) {
-                const { Position, Size, Rotation } = obj.WorldInstance;
-                const drawImage = {
-                    position: Position.multiplyVector(new Vector2(1, -1))
-                        .add(new Vector2(width / 2, height / 2))
-                        .subtract(Size.multiplyScalar(0.5)),
-                    width: Size.x,
-                    height: Size.y,
-                    rotation: Rotation,
-                };
-                // Translate to the center of the object
-                this.Context.translate(drawImage.position.x + drawImage.width / 2, drawImage.position.y + drawImage.height / 2);
-                //camera
-                this.Context.translate(-this.Camera.x, -this.Camera.y);
-                // Rotate around the center of the object
-                this.Context.rotate(drawImage.rotation);
-                // Draw the rotated image
-                this.Context.drawImage(obj.Sprite, -drawImage.width / 2, -drawImage.height / 2, drawImage.width, drawImage.height);
+                this.renderWorldObject(obj, width, height);
             }
             else if (obj instanceof Text) {
-                const { Position, Font, Text } = obj;
-                const drawTextPosition = Position.multiplyVector(new Vector2(1, -1))
-                    .add(new Vector2(width / 2, height / 2));
-                this.Context.font = Font;
-                this.Context.fillText(Text, drawTextPosition.x, drawTextPosition.y);
+                this.renderText(obj, width, height);
+            }
+            else if (obj instanceof Selection) {
+                this.renderSelection(obj, width, height);
             }
         });
         // Restore the canvas state
         this.Context.restore();
+    }
+    renderWorldObject(obj, width, height) {
+        const { Position, Size, Rotation } = obj.WorldInstance;
+        const drawImage = {
+            position: Position.multiplyVector(new Vector2(1, -1))
+                .add(new Vector2(width / 2, height / 2))
+                .subtract(Size.multiplyScalar(0.5)),
+            width: Size.x,
+            height: Size.y,
+            rotation: Rotation,
+        };
+        this.Context.translate(drawImage.position.x + drawImage.width / 2, drawImage.position.y + drawImage.height / 2);
+        // camera
+        this.Context.translate(-this.Camera.x, -this.Camera.y);
+        this.Context.rotate(drawImage.rotation);
+        this.Context.drawImage(obj.Sprite, -drawImage.width / 2, -drawImage.height / 2, drawImage.width, drawImage.height);
+    }
+    renderText(obj, width, height) {
+        const { Position, Font, Text } = obj;
+        const drawTextPosition = Position.multiplyVector(new Vector2(1, -1))
+            .add(new Vector2(width / 2, height / 2));
+        this.Context.font = Font;
+        this.Context.fillText(Text, drawTextPosition.x, drawTextPosition.y);
+    }
+    renderSelection(obj, width, height) {
+        const adornee = obj.Adornee;
+        const { Position, Size, Rotation } = adornee.WorldInstance;
+        const drawImage = {
+            position: Position.multiplyVector(new Vector2(1, -1))
+                .add(new Vector2(width / 2, height / 2))
+                .subtract(Size.multiplyScalar(0.5)),
+            width: Size.x,
+            height: Size.y,
+            rotation: Rotation,
+        };
+        this.Context.translate(drawImage.position.x + drawImage.width / 2, drawImage.position.y + drawImage.height / 2);
+        // camera
+        this.Context.translate(-this.Camera.x, -this.Camera.y);
+        this.Context.rotate(drawImage.rotation);
+        this.Context.drawImage(adornee.Sprite, -drawImage.width / 2, -drawImage.height / 2, drawImage.width, drawImage.height);
+        this.Context.rect(-drawImage.width / 2, -drawImage.height / 2, drawImage.width, drawImage.height);
     }
 }
 export class World extends Service {
@@ -143,6 +167,13 @@ export class Text extends Component {
         this.Text = Text;
         this.Position = Position;
         this.Font = Font;
+    }
+}
+export class Selection extends Component {
+    constructor(Service, Name, Adornee, Position = new Vector2()) {
+        super(Service, Name);
+        this.Adornee = Adornee;
+        this.Position = Position;
     }
 }
 export class Actor extends WorldObject {
