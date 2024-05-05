@@ -73,11 +73,12 @@ export class InputService extends Service {
     }
 }
 export class Renderer extends Service {
-    constructor(Project, Context) {
+    constructor(Project, Context, Camera = new Vector2()) {
         var _a;
         super(Project);
         this.Project = Project;
         this.Context = Context;
+        this.Camera = Camera;
         let RS = (_a = this.Project) === null || _a === void 0 ? void 0 : _a.GetService("RunService");
         RS.OnUpdate(new Listener(this, this.Render));
     }
@@ -102,6 +103,7 @@ export class Renderer extends Service {
                 };
                 // Translate to the center of the object
                 this.Context.translate(drawImage.position.x + drawImage.width / 2, drawImage.position.y + drawImage.height / 2);
+                this.Context.translate(-this.Camera.x, -this.Camera.y);
                 // Rotate around the center of the object
                 this.Context.rotate(drawImage.rotation);
                 // Draw the rotated image

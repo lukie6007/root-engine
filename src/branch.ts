@@ -81,7 +81,7 @@ export class InputService extends Service {
 }
 
 export class Renderer extends Service {
-    constructor(public Project: Project, public Context: CanvasRenderingContext2D) {
+    constructor(public Project: Project, public Context: CanvasRenderingContext2D, public Camera: Vector2 = new Vector2()) {
         super(Project)
 
         let RS = this.Project?.GetService("RunService") as RunService
@@ -118,6 +118,11 @@ export class Renderer extends Service {
                     drawImage.position.x + drawImage.width / 2,
                     drawImage.position.y + drawImage.height / 2
                 );
+
+                this.Context.translate(
+                    -this.Camera.x,
+                    -this.Camera.y
+                )
     
                 // Rotate around the center of the object
                 this.Context.rotate(drawImage.rotation);
