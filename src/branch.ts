@@ -121,7 +121,7 @@ export class Renderer extends Service {
 
                 this.Context.translate(
                     -this.Camera.x,
-                    -this.Camera.y
+                    this.Camera.y
                 )
     
                 // Rotate around the center of the object
