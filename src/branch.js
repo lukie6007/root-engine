@@ -170,10 +170,9 @@ export class Text extends Component {
     }
 }
 export class Selection extends Component {
-    constructor(Service, Name, Adornee, Position = new Vector2()) {
+    constructor(Service, Name, Adornee) {
         super(Service, Name);
         this.Adornee = Adornee;
-        this.Position = Position;
     }
 }
 export class Actor extends WorldObject {

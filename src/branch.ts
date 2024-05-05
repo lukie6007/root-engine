@@ -222,7 +222,7 @@ export class Text extends Component {
 }
 
 export class Selection extends Component {
-    constructor(Service: Service, Name: string, public Adornee: WorldObject, public Position: Vector2 = new Vector2()) { super(Service, Name) }
+    constructor(Service: Service, Name: string, public Adornee: WorldObject) { super(Service, Name) }
 }
 
 export class Actor extends WorldObject {
