@@ -5,7 +5,7 @@ export class Component {
 
     Find(child: string): Component | undefined { return this.Service?.Children.find(component => component.Name === child); }
 
-    GetChildren(): Component[] { return this.Service?.Children.find((child) => child.Parent == this) }
+    GetChildren(): Component[] | undefined { return this.Service?.Children.filter((child) => child.Parent == this) }
 
     Clone(): Component { return { ...this } }
 

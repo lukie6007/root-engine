@@ -1,5 +1,5 @@
 import { Component, Service } from "./base.js";
-import { Listener, Mouse, Mouse, Vector2, WorldInstance } from "./datatypes.js";
+import { Listener, Mouse, Vector2, WorldInstance } from "./datatypes.js";
 
 export class Project {
     constructor(public Name: string = "New Project", public Context: CanvasRenderingContext2D, public Settings: object = {}, public Services: Service[] = [], public ID = 0) {
@@ -102,7 +102,7 @@ export class Renderer extends Service {
     
         renderObjects?.forEach((obj) => {
             if (obj instanceof WorldObject) {
-                const { Position, Size, Rotation, Sprite } = obj.WorldInstance;
+                const { Position, Size, Rotation } = obj.WorldInstance;
                 const drawImage = {
                     position: Position.multiplyVector(new Vector2(1, -1))
                         .add(new Vector2(width / 2, height / 2))
