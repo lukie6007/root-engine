@@ -127,7 +127,7 @@ export class World extends Service {
 }
 //components
 export class WorldObject extends Component {
-    constructor(Service, Name, Sprite) {
+    constructor(Service, Name, Sprite = new Image()) {
         super(Service, Name, null);
         this.Sprite = Sprite;
         this.WorldInstance = new WorldInstance();
