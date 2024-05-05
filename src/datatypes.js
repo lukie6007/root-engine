@@ -13,6 +13,44 @@ export class Vector2 {
         this.multiplyVector = (other) => new Vector2(this.x * other.x, this.y * other.y);
     }
 }
+export class Vector3 {
+    constructor(x = 0, y = 0, z = 0) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+    get magnitude() {
+        return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+    }
+    normalize() {
+        const magnitude = this.magnitude;
+        return new Vector3(this.x / magnitude, this.y / magnitude, this.z / magnitude);
+    }
+    dot(other) {
+        return this.x * other.x + this.y * other.y + this.z * other.z;
+    }
+    angleBetween(other) {
+        return Math.acos(this.dot(other) / (this.magnitude * other.magnitude));
+    }
+    add(other) {
+        return new Vector3(this.x + other.x, this.y + other.y, this.z + other.z);
+    }
+    subtract(other) {
+        return new Vector3(this.x - other.x, this.y - other.y, this.z - other.z);
+    }
+    divide(other) {
+        return new Vector3(this.x / other.x, this.y / other.y, this.z / other.z);
+    }
+    multiplyScalar(scalar) {
+        return new Vector3(this.x * scalar, this.y * scalar, this.z * scalar);
+    }
+    multiplyVector(other) {
+        return new Vector3(this.x * other.x, this.y * other.y, this.z * other.z);
+    }
+    crossProduct(other) {
+        return new Vector3(this.y * other.z - this.z * other.y, this.z * other.x - this.x * other.z, this.x * other.y - this.y * other.x);
+    }
+}
 export var CollisionShape;
 (function (CollisionShape) {
     CollisionShape[CollisionShape["Rectangle"] = 0] = "Rectangle";

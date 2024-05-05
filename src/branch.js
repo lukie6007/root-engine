@@ -59,7 +59,7 @@ export class InputService extends Service {
         if (!this.KeysDown.includes(key)) {
             this.KeysDown.push(key);
         }
-        event.preventDefault();
+        //event.preventDefault();
     }
     handleKeyUp(event) {
         const key = event.key;
@@ -103,6 +103,7 @@ export class Renderer extends Service {
                 };
                 // Translate to the center of the object
                 this.Context.translate(drawImage.position.x + drawImage.width / 2, drawImage.position.y + drawImage.height / 2);
+                //camera
                 this.Context.translate(-this.Camera.x, -this.Camera.y);
                 // Rotate around the center of the object
                 this.Context.rotate(drawImage.rotation);

@@ -64,7 +64,7 @@ export class InputService extends Service {
             this.KeysDown.push(key);
         }
 
-        event.preventDefault();
+        //event.preventDefault();
     }
 
     protected handleKeyUp(event: KeyboardEvent) {
@@ -119,6 +119,7 @@ export class Renderer extends Service {
                     drawImage.position.y + drawImage.height / 2
                 );
 
+                //camera
                 this.Context.translate(
                     -this.Camera.x,
                     -this.Camera.y
