@@ -156,7 +156,7 @@ export class World extends Service {
 export class WorldObject extends Component {
     WorldInstance: WorldInstance
 
-    constructor(Service: Service, Name: string, public Sprite: HTMLImageElement) {
+    constructor(Service: Service, Name: string, public Sprite: HTMLImageElement = new Image()) {
         super(Service, Name, null)
         this.WorldInstance = new WorldInstance()
         this.WorldInstance.Size = new Vector2(this.Sprite.width, this.Sprite.height)
