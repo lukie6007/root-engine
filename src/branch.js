@@ -103,7 +103,7 @@ export class Renderer extends Service {
                 };
                 // Translate to the center of the object
                 this.Context.translate(drawImage.position.x + drawImage.width / 2, drawImage.position.y + drawImage.height / 2);
-                this.Context.translate(-this.Camera.x, this.Camera.y);
+                this.Context.translate(-this.Camera.x, -this.Camera.y);
                 // Rotate around the center of the object
                 this.Context.rotate(drawImage.rotation);
                 // Draw the rotated image
