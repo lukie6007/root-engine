@@ -42,9 +42,10 @@ export class RunService extends Service {
 }
 
 export class InputService extends Service {
-    constructor(Project: Project, public context: CanvasRenderingContext2D, public KeysDown: string[] = [], public Mouse: Mouse = new Mouse()) {
+    Mouse: Mouse
+    constructor(Project: Project, public context: CanvasRenderingContext2D, public KeysDown: string[] = []) {
         super(Project)
-
+        this.Mouse = new Mouse()
         // Using arrow functions to maintain the correct context of "this"
         document.addEventListener("mousemove", (event) => this.getMouse(event));
         document.addEventListener("keydown", (event) => this.handleKeyDown(event));
@@ -123,7 +124,7 @@ export class Renderer extends Service {
     
                 // Draw the rotated image
                 this.Context.drawImage(
-                    Sprite,
+                    obj.Sprite,
                     -drawImage.width / 2,
                     -drawImage.height / 2,
                     drawImage.width,
