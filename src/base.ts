@@ -3,24 +3,11 @@ import { Project } from "./branch.js";
 export class Component {
     constructor(public Service: Service | null, public Name: string, public Parent: Component | null = null, public ID: number = 0) { Service?.Children.push(this) }
 
-    Find(child: string): Component | undefined {
-        return this.Service?.Children.find(component => component.Name === child);
-    }
+    Find(child: string): Component | undefined { return this.Service?.Children.find(component => component.Name === child); }
 
-    GetChildren() {
-        let out: Component[] = []
-        this.Service?.Children.forEach((child) => {
-            if (child.Parent == this) {
-                out.push(child)
-            }
-        })
-        return out
-    }
+    GetChildren(): Component[] { return this.Service?.Children.find((child) => child.Parent == this) }
 
-    Clone(): Component {
-        // Create a new instance of Component with the same properties
-        return { ...this }
-    }
+    Clone(): Component { return { ...this } }
 
     Destroy() {
         this.Parent = null
