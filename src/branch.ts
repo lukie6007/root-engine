@@ -2,7 +2,7 @@ import { Component, Service } from "./base.js";
 import { Listener, Mouse, Vector2, WorldInstance } from "./datatypes.js";
 
 export class Project {
-    constructor(public Name: string = "New Project", public Context: CanvasRenderingContext2D, public Settings: object = {}, public Services: Service[] = []) {
+    constructor(public Name: string = "New Project", public Context: CanvasRenderingContext2D, public Settings: object = {}, public Services: Service[] = [], public ID = 0) {
         new RunService(this)
         new World(this)
         new InputService(this, Context)
