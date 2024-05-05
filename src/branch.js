@@ -143,7 +143,8 @@ export class Renderer extends Service {
         this.Context.translate(-this.Camera.x, -this.Camera.y);
         this.Context.rotate(drawImage.rotation);
         this.Context.drawImage(adornee.Sprite, -drawImage.width / 2, -drawImage.height / 2, drawImage.width, drawImage.height);
-        this.Context.rect(-drawImage.width / 2, -drawImage.height / 2, drawImage.width, drawImage.height);
+        this.Context.strokeStyle = "blue";
+        this.Context.strokeRect(-drawImage.width / 2, -drawImage.height / 2, drawImage.width, drawImage.height);
     }
 }
 export class World extends Service {

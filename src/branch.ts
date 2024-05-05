@@ -190,7 +190,8 @@ private renderSelection(obj: Selection, width: number, height: number) {
     drawImage.height
   );
 
-  this.Context.rect(
+  this.Context.strokeStyle = "blue"
+  this.Context.strokeRect(
     -drawImage.width / 2,
     -drawImage.height / 2,
     drawImage.width,
